@@ -9,17 +9,6 @@ def getImList(path, extension):
             if f.endswith(extension)]
 
 
-def getGrayImg(img):
-    return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-
-def getFilteredImage(img):
-    imgBlur = cv2.medianBlur(img, 5)
-    #imgBlur = cv2.bilateralFilter(imgBlur, 9, 95, 95)
-    #imgBlur = cv2.GaussianBlur(imgBlur, (5, 5), 0)
-    return imgBlur
-
-
 def getHistogramsEqualization(img):
     equ = cv2.equalizeHist(img)
     return equ
@@ -41,18 +30,16 @@ if __name__ == '__main__':
         if img is None:
             continue
 
-        imgGray = getGrayImg(img)
-        imgBlurred = getFilteredImage(imgGray)
-
+        imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        #imgBlurred = getFilteredImage(imgGray)
+        imgBlurred = cv2.medianBlur(imgGray, 5)
         imgTh = getThresholding(imgBlurred)
         #imgEqu = getHistogramsEqualization(imgTh)
 
-        imgBlurred = getFilteredImage(imgTh)
+        imgBlurred = cv2.medianBlur(imgTh, 5)
         imgBlurred = cv2.GaussianBlur(imgBlurred, (19, 19), 0, 0)
 
         imgEdges = cv2.Canny(imgBlurred, 100, 200)
-
-        ret, mask = cv2.threshold(imgEdges, 10, 255, cv2.THRESH_BINARY)
 
         totalImg = img
         totalImg[imgEdges[:, :] == 255, 0] = 255
