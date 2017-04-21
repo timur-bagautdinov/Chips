@@ -41,15 +41,19 @@ if __name__ == '__main__':
 
         imgEdges = cv2.Canny(imgBlurred, 100, 200)
 
-        totalImg = img
-        totalImg[imgEdges[:, :] == 255, 0] = 255
-        totalImg[imgEdges[:, :] == 255, 1] = 0
-        totalImg[imgEdges[:, :] == 255, 2] = 0
+        #totalImg = img
+        #totalImg[imgEdges[:, :] == 255, 0] = 255
+        #totalImg[imgEdges[:, :] == 255, 1] = 0
+        #totalImg[imgEdges[:, :] == 255, 2] = 0
 
-        cv2.imshow('Chip', totalImg)
+        im2, contours, hierarchy = cv2.findContours(imgEdges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        cv2.drawContours(img, contours, -1, (255, 0, 0), 3)
+
+        cv2.imshow('Chip', img)
 
         key = cv2.waitKey(0) & 0xFF
         if key == 27:
-            break;
+            break
 
     cv2.destroyAllWindows()
